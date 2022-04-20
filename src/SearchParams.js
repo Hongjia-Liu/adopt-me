@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Pet from "./Pet";
 
 const ANIMALS = ["bird", "cat", "dog", "rabbit", "reptile"];
 
@@ -7,6 +8,20 @@ const SearchParams = () => {
   const [animal, setAnimal] = useState("");
   const [breed, setBreed] = useState("");
   const breeds = [];
+  const [pets, setPets] = useState([]);
+
+  useEffect(() => {
+    requestPets();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const requestPets = async () => {
+    const res = await fetch(
+      `http://pets-v2.dev-apis.com/pets?animal=${animal}&location=${location}&breed=${breed}`
+    );
+    const json = await res.json();
+    setPets(json.pets);
+  };
+
   return (
     <div className="search-params">
       <form>
@@ -21,6 +36,7 @@ const SearchParams = () => {
             onChange={(e) => setLocation(e.target.value)}
           />
         </label>
+
         <label htmlFor="animal">
           Animal
           <select
@@ -67,8 +83,17 @@ const SearchParams = () => {
             ))}
           </select>
         </label>
+
         <button type="submit">Submit</button>
       </form>
+      {pets.map((pet) => (
+        <Pet
+          key={pet.id}
+          name={pet.name}
+          animal={pet.animal}
+          breed={pet.breed}
+        />
+      ))}
     </div>
   );
 };
