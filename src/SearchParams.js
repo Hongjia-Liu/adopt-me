@@ -105,7 +105,6 @@ const SearchParams = () => {
         <button type="submit" style={{ backgroundColor: theme }}>
           Submit
         </button>
-        ;
       </form>
       <Results pets={pets} />
     </div>
